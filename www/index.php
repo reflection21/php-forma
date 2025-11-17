@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Вхід</title>
+</head>
+<body>
+    <h2>Вхід на сайт</h2>
+    
+    <form method="post" action="login.php">
+        Логін: <input type="text" name="login" required><br><br>
+        Пароль: <input type="password" name="pass" required><br><br>
+        <input type="submit" value="Увійти">
+    </form>
+    
+    <br>
+    <p>Немає акаунту? <a href="register.php">Зареєструватися</a></p>
+    
+</body>
+</html>
