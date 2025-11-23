@@ -1,0 +1,5 @@
+RewriteRule ^1/([A-Za-z0-9]+)/?$ /aaa.php?var=$1 [R=302,L]
+
+RewriteRule ^2/([A-Za-z0-9]+)/?$ /bbb.php?$1=1 [R=301,L]
+
+RewriteRule ^3/([A-Za-z0-9]+)/?$ /test-$1 [R=301,L]

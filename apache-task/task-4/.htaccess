@@ -1,0 +1,7 @@
+RewriteRule ^(admin|internal|private)/ - [F,L]
+
+RewriteCond %{HTTPS} off
+RewriteRule ^([A-Za-z]+)/([A-Za-z]+)([0-9]+)$ https://%{HTTP_HOST}/http/1.php?$2=$3 [R=301,L]
+
+RewriteCond %{HTTPS} on
+RewriteRule ^([A-Za-z]+)/([A-Za-z]+)([0-9]+)$ https://%{HTTP_HOST}/1.php?$2=$3 [R=301,L]

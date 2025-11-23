@@ -1,0 +1,8 @@
+### 1.Доступ по ип на /admin
+
+- mkdkr /home/user2/public_html/admin && cd $_ && touch .htaccess
+- echo “
+Order Deny,Allow
+Deny from all
+Allow from 95.214.233.233
+” >> .htaccess

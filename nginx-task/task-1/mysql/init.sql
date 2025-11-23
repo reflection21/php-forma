@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS user4_sql_lab CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE user4_sql_lab;
+CREATE DATABASE IF NOT EXISTS user_sql_lab CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE user_sql_lab;
 
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
@@ -9,4 +9,4 @@ CREATE TABLE users (
 ) ENGINE=InnoDB;
 
 INSERT INTO users (login, password) VALUES 
-('user4_sql_lab', '21012000zxc');
+('user_sql_lab', '21012000zxc');

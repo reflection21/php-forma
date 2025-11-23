@@ -1,0 +1,10 @@
+RewriteCond %{REQUEST_URI} (^|/)\.([^/]+)(/|$)
+RewriteCond %{DOCUMENT_ROOT}/%1.%2 -d [OR]
+RewriteCond %{DOCUMENT_ROOT}/%1.%2 -f
+RewriteRule ^.*$ /forbidden [R=301,L]
+
+RewriteCond %{REQUEST_URI} !^/file\.php$
+RewriteCond %{REQUEST_URI} !^/forbidden$
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /file.php?arg=$1 [R=301,L,QSA,NE]

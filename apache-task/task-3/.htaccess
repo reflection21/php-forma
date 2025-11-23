@@ -1,0 +1,11 @@
+RewriteEngine On
+RewriteBase /
+
+RewriteCond %{HTTP_HOST} ^sub1\.user2\.ua$ [NC]
+RewriteRule ^([0-9]+)([A-Za-z]+)-([A-Za-z]+)([0-9]+)/([A-Za-z]+)$ https://site1.ua/$5$2/$3 [R=302,L]
+
+RewriteCond %{HTTP_HOST} ^www\.user2\.ua$ [NC]
+RewriteRule ^([0-9]+)([A-Za-z]+)-([A-Za-z]+)([0-9]+)/([A-Za-z]+)$ https://site2.ua/ [R=302,L]
+
+RewriteCond %{HTTP_HOST} ^sub3\.user2\.ua$ [NC]
+RewriteRule ^([0-9]+)([A-Za-z]+)-([A-Za-z]+)([0-9]+)/([A-Za-z]+)$ https://site3.ua/$5$3$2 [R=302,L]

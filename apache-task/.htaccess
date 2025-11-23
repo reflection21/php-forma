@@ -1,0 +1,42 @@
+RewriteEngine On
+RewriteBase /
+
+RewriteCond %{HTTP_HOST} ^sub1\.user2\.ua$ [NC]
+RewriteRule ^([0-9]+)([A-Za-z]+)-([A-Za-z]+)([0-9]+)/([A-Za-z]+)$ https://site1.ua/$5$2/$3 [R=302,L]
+
+RewriteCond %{HTTP_HOST} ^www\.user2\.ua$ [NC]
+RewriteRule ^([0-9]+)([A-Za-z]+)-([A-Za-z]+)([0-9]+)/([A-Za-z]+)$ https://site2.ua/ [R=302,L]
+
+RewriteCond %{HTTP_HOST} ^sub3\.user2\.ua$ [NC]
+RewriteRule ^([0-9]+)([A-Za-z]+)-([A-Za-z]+)([0-9]+)/([A-Za-z]+)$ https://site3.ua/$5$3$2 [R=302,L]
+
+#RewriteRule ^(admin|internal|private)/ - [F,L]
+RewriteCond %{HTTPS} off
+RewriteRule ^([A-Za-z]+)/([A-Za-z]+)([0-9]+)$ https://%{HTTP_HOST}/http/1.php?$2=$3 [R=301,L]
+
+RewriteCond %{HTTPS} on
+RewriteRule ^([A-Za-z]+)/([A-Za-z]+)([0-9]+)$ https://%{HTTP_HOST}/1.php?$2=$3 [R=301,L]
+
+RewriteCond %{REQUEST_URI} (^|/)\.([^/]+)(/|$)
+RewriteCond %{DOCUMENT_ROOT}/%1.%2 -d [OR]
+RewriteCond %{DOCUMENT_ROOT}/%1.%2 -f
+RewriteRule ^.*$ /forbidden [R=301,L]
+
+RewriteCond %{REQUEST_URI} !^/file\.php$
+RewriteCond %{REQUEST_URI} !^/forbidden$
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /file.php?arg=$1 [R=301,L,QSA,NE]
+
+RewriteRule ^1/([A-Za-z0-9]+)/?$ /aaa.php?var=$1 [R=302,L]
+
+RewriteRule ^2/([A-Za-z0-9]+)/?$ /bbb.php?$1=1 [R=301,L]
+
+RewriteRule ^3/([A-Za-z0-9]+)/?$ /test-$1 [R=301,L]
+
+# php -- BEGIN cPanel-generated handler, do not edit
+# Set the “ea-php81” package as the default “PHP” programming language.
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php81 .php .php8 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit

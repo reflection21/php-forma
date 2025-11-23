@@ -10,5 +10,5 @@ if (!isset($_SESSION['user'])) {
 <h1>Вітаємо, <?=htmlspecialchars($_SESSION['user'])?>!</h1>
 <p>Це захищена сторінка. Тільки авторизовані користувачі можуть її бачити.</p>
 <br>
-<a href="change_password.php">Змінити пароль</a> | <a href="logout.php">Вийти</a>
+<a href="change_password.php">Змінити пароль</a> | <a href="index.html">Вийти</a>
 </body></html>
