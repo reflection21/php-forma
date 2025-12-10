@@ -206,16 +206,15 @@ network:
 
   bridges:
     br228:
-      interfaces: [bond0, ens22]         # ← ens22 и bond0 в одном мосту
+      interfaces: [bond0, ens22]        
       dhcp4: no
       parameters:
         stp: false
-        vlan-filtering: true             # ← КРИТИЧНО! без этого VLAN не выйдет наружу
-
+        vlan-filtering: true           
   vlans:
     vlan103:
       id: 111
-      link: bond0                        # ← vlan на мосту, а не на bond0
+      link: bond0                      
       addresses: [10.0.]
 
 
@@ -233,3 +232,302 @@ network:
       id: 111
       link: ens18
       addresses: [10.0.0.2/24]
+
+
+
+
+
+network:
+  version: 2
+  ethernets:
+    ens19: {}
+    ens20: {}
+    ens18:
+      dhcp4: no
+      addresses:
+        - 192.168.122.91/24
+  bonds:
+    bond0:
+      interfaces: [ens19, ens20]
+      parameters:
+        mode: active-backup
+        primary: ens19
+  vlans:
+    vlan111:
+      id: 111
+      link: bond0
+      addresses:
+        - 21.0.1.1/24
+    vlan112:
+      id: 112
+      link: bond0
+      addresses:
+        - 21.0.2.1/24
+
+
+
+
+
+
+
+
+
+        network:
+  version: 2
+  renderer: networkd
+
+  ethernets:
+    ens18:
+      dhcp4: no
+      addresses: [192.168.122.15/24]
+      routes:
+        - to: default
+          via: 192.168.122.1
+
+    ens19: {}
+    ens20: {}
+  bonds:
+    bond0:
+      interfaces: [ens19, ens20]
+      parameters:
+        mode: active-backup
+        primary: ens19
+  vlans:
+    vlan111:
+      id: 111
+      link: bond0
+      addresses:
+        - 21.0.1.2/24
+    vlan112:
+      id: 112
+      link: bond0
+      addresses:
+        - 21.0.2.2/24
+
+
+
+network:
+  version: 2
+  renderer: networkd
+
+  ethernets:
+    ens18:
+      addresses:
+        - 192.168.122.15/24    
+    ens19: {}
+    ens20: {}
+    ens21: {}     # тот самый "порт как свитч"
+
+  bonds:
+    bond0:
+      interfaces: [ens19, ens20]
+      parameters:
+        mode: active-backup
+        primary: ens19
+
+  bridges:
+    br0:
+      interfaces: [bond0, ens21]
+      parameters:
+        stp: false
+        forward-delay: 0
+
+  vlans:
+    vlan111:
+      id: 111
+      link: br0 
+      addresses:
+        - 21.0.1.2/24
+
+    vlan112:
+      id: 112
+      link: br0
+      addresses:
+        - 21.0.2.2/24
+
+
+
+
+sudo nft flush ruleset удаляет все правила
+
+sudo nft list ruleset - посмотерть правила
+
+nft add table bridge filter
+
+nft add chain bridge filter vlan111 { type filter hook forward priority -200\; policy accept\; }
+
+nft add rule bridge filter vlan111 vlan id 111 counter drop
+
+sudo nft delete rule bridge filter vlan111 handle 0
+
+nft delete rule bridge filter hello handle 0
+
+
+network:
+  ethernets:
+    ens18:
+      dhcp4: false
+      addresses: 
+        - 192.168.122.10/24
+      routes:
+        - to: 0.0.0.0/0
+          via: 192.168.122.1
+    ens19: {}
+    ens20: {}
+  bonds:
+    bond0:
+      interfaces: [ens19, ens20]
+      addresses: [192.168.93.1/24]
+      macaddress: 02:11:22:33:44:65  
+      parameters:
+        mode: active-backup 
+  vlans:
+    vlan111:
+      id: 111
+      link: bond0
+      addresses:
+        - 10.0.0.1/24
+    vlan112:
+      id: 112
+      link: bond0
+      addresses:
+        - 10.0.1.1/24
+
+
+
+network:
+  version: 2
+  renderer: networkd
+
+  ethernets:
+    ens18:
+      addresses:
+        - 192.168.122.15/24    
+    ens19: {}
+    ens20: {}
+    ens21: {}     #порт как свитч
+    ens22: 
+      addresses:
+        - 21.0.1.1/24  
+  bonds:
+    bond0:
+      interfaces: [ens19, ens20]
+      addresses: [192.168.93.2/24]  
+      macaddress: 02:11:22:33:44:55
+      parameters:
+        mode: active-backup
+
+
+  bridges:
+    br0:
+      interfaces: [bond0, ens21]
+      parameters:
+        stp: false
+        forward-delay: 0
+  vlans:
+    vlan3:
+      id: 113
+      link: bond0
+      addresses:
+        - 10.0.2.254/24
+
+
+
+network:
+  version: 2
+  ethernets:
+    ens19: {}
+    ens18:
+      dhcp4: no
+      addresses:
+        - 192.168.122.91/24
+  vlans:
+    vlan111:
+      id: 111
+      link: ens19 
+      addresses: 
+        - 10.0.0.2/24
+    vlan112:
+      id: 112
+      link: ens19
+      addresses:
+        - 10.0.1.2/24
+
+
+
+
+root@a21:~# ethtool ens20
+Settings for ens20:
+	Supported ports: [  ]
+	Supported link modes:   Not reported
+	Supported pause frame use: No
+	Supports auto-negotiation: No
+	Supported FEC modes: Not reported
+	Advertised link modes:  Not reported
+	Advertised pause frame use: No
+	Advertised auto-negotiation: No
+	Advertised FEC modes: Not reported
+	Speed: Unknown!
+	Duplex: Unknown! (255)
+	Auto-negotiation: off
+	Port: Other
+	PHYAD: 0
+	Transceiver: internal
+	Link detected: yes
+
+
+
+
+#!/bin/bash
+echo 100 > /sys/class/net/bond0/bonding/arp_interval
+echo 192.168.93.2 > /sys/class/net/bond0/bonding/arp_ip_target
+echo 1 > /sys/class/net/bond0/bonding/arp_validate
+
+
+From 192.168.93.1 icmp_seq=132 Destination Host Unreachable
+64 bytes from 192.168.93.2: icmp_seq=133 ttl=64 time=1243 ms
+64 bytes from 192.168.93.2: icmp_seq=134 ttl=64 time=218 ms
+
+
+ 839  echo active > /sys/class/net/bond0/bonding/fail_over_mac
+echo 100 > /sys/class/net/bond0/bonding/arp_interval
+echo 192.168.93.2 > /sys/class/net/bond0/bonding/arp_ip_target
+echo 1 > /sys/class/net/bond0/bonding/arp_validate
+echo active > /sys/class/net/bond0/bonding/fail_over_mac
+echo 100 > /sys/class/net/bond0/bonding/arp_interval
+echo 192.168.93.2 > /sys/class/net/bond0/bonding/arp_ip_target
+echo 1 > /sys/class/net/bond0/bonding/arp_validate
+
+
+
+sudo modprobe bonding
+echo bonding | sudo tee -a /etc/modules
+
+
+network:
+  version: 2
+  renderer: networkd
+
+  ethernets:
+    ens18:
+      addresses:
+        - 192.168.122.15/24
+      routes:
+        - to: 0.0.0.0/0
+          via: 192.168.122.1
+      nameservers:
+        addresses:
+          - 8.8.8.8
+          - 1.1.1.1
+    ens19: {}
+    ens20: {}
+  bonds:
+    bond0:
+      interfaces: [ens19, ens20]
+      addresses: [192.168.93.2/24]
+      parameters:
+        mode: 802.3ad 
+        lacp-rate: fast
+        mii-monitor-interval: 100
+        transmit-hash-policy: layer2+3
+

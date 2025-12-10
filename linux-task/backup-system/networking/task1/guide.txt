@@ -15,3 +15,16 @@ vim /etc/sysctl.conf
 iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 iptables -t nat -A POSTROUTING -s 10.0.7.0/24 -j MASQUERADE
+
+
+nft add table bridge filter
+nft add chain bridge filter forward { type filter hook forward priority -200\; policy accept\; }
+nft add rule bridge filter forward vlan id 111 counter drop
+
+nft add table raw
+nft add chain raw prerouting { type filter hook prerouting priority -300\; policy accept\; }
+nft add rule raw prerouting vlan id 111 counter drop
+
+
+
+

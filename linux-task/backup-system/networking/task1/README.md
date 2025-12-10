@@ -1,6 +1,3 @@
-sudo sysctl -w net.ipv4.ip_forward=1
-echo "net.ipv4.ip_forward=1" | sudo tee -a /etc/sysctl.conf
-
 sudo iptables -A FORWARD -s 10.0.6.2/32 -j ACCEPT
 sudo iptables -A FORWARD -d 10.0.6.2/32 -j ACCEPT
 
